@@ -41,7 +41,7 @@ class bcumlSettings {
 		<div class="wrap bc_settings_table">
 			<h2 class="wp-heading-inline">Upload/memory limit</h2>
 			<p></p>
-			<?php settings_errors(); ?>
+			<?php settings_errors();?>
 
 			<form method="post" action="options.php">
 				<div class="table_php_value">
@@ -109,19 +109,19 @@ class bcumlSettings {
 			// I'm not going to go here
 		} else {
 			// Ensure get_home_path() is declared.
-			if($_REQUEST['enable_php_value']=='true'){
+			if($input['enable_php_value']=='true'){
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			
 				$home_path     = get_home_path();
 				$htaccess_file = $home_path . '.htaccess';
 			
 				$lines = array();
-				if(!empty($_REQUEST['upload_max_filesize']))
-					array_push($lines,'php_value upload_max_filesize '.$_REQUEST['upload_max_filesize']);
-				if(!empty($_REQUEST['post_max_size']))
-					array_push($lines,'php_value post_max_size '.$_REQUEST['post_max_size']);
-				if(!empty($_REQUEST['max_execution_time']))
-					array_push($lines,'php_value max_execution_time '.$_REQUEST['max_execution_time']);
+				if(!empty($input['upload_max_filesize']))
+					array_push($lines,'php_value upload_max_filesize '.$input['upload_max_filesize']);
+				if(!empty($input['post_max_size']))
+					array_push($lines,'php_value post_max_size '.$input['post_max_size']);
+				if(!empty($input['max_execution_time']))
+					array_push($lines,'php_value max_execution_time '.$input['max_execution_time']);
 		
 				if ( insert_with_markers( $htaccess_file, 'BEGIN BWEB_COMPONENT upload-memory-limit', $lines ) ) {
 					// Celebrate your success
@@ -136,30 +136,34 @@ class bcumlSettings {
 	
 	public function enable_php_value_setting() {
 		printf(
-			'<input type="checkbox" name="enable_php_value" value="true" >',
+			'<input type="checkbox" name="bc_uml_php_value[enable_php_value]" value="true" %s>',
+			( isset( $this->bc_uml_enable_php_value['enable_php_value'] ) && $this->bc_uml_enable_php_value['enable_php_value'] === 'true' ) ? 'checked' : ''
 		);
 	}
 
 	public function upload_max_filesize_setting() {
 		printf(
-			'<input type="text" name="upload_max_filesize" value="%s" disabled>',
-			ini_get( 'upload_max_filesize' )
+			'<input type="text" name="bc_uml_php_value[upload_max_filesize]" value="%s" %s>',
+			ini_get( 'upload_max_filesize' ),
+			( isset( $this->bc_uml_enable_php_value['enable_php_value'] ) && $this->bc_uml_enable_php_value['enable_php_value'] === 'true' ) ? '' : 'disabled'
 		);
 		
 	}
 	public function post_max_size_setting() {
 		
 		printf(
-			'<input type="text" name="post_max_size" value="%s" disabled>',
-			ini_get( 'post_max_size' )
+			'<input type="text" name="bc_uml_php_value[post_max_size]" value="%s" %s>',
+			ini_get( 'post_max_size' ),
+			( isset( $this->bc_uml_enable_php_value['enable_php_value'] ) && $this->bc_uml_enable_php_value['enable_php_value'] === 'true' ) ? '' : 'disabled'
 		);
 		
 	}
 	public function max_execution_time_setting() {
 		
 		printf(
-			'<input type="text" name="max_execution_time" value="%s" disabled>',
-			ini_get( 'max_execution_time' )
+			'<input type="text" name="bc_uml_php_value[max_execution_time]" value="%s" %s>',
+			ini_get( 'max_execution_time' ),
+			( isset( $this->bc_uml_enable_php_value['enable_php_value'] ) && $this->bc_uml_enable_php_value['enable_php_value'] === 'true' ) ? '' : 'disabled'
 		);
 	}
 
